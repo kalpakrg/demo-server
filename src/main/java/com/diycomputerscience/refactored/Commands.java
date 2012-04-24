@@ -9,7 +9,7 @@ public enum Commands implements Command {
         public boolean execute(SessionContext context, List<String> params) throws IOException {
             context.setUserName(params.get(0));
             context.invalidateLogin();
-            context.writeSuccess("Ok");
+            context.getResponder().respondWithOk();
             return maintainSession();
         }
 
@@ -28,14 +28,14 @@ public enum Commands implements Command {
         @Override
         public boolean execute(SessionContext context, List<String> params)  throws IOException {
             if (context.getUserName() == null) {
-                context.writeError("Issue \"user\" command first");
+                context.getResponder().respondWithIssueUserCommandFirst();
                 return maintainSession();
             }
             
             if (!context.login(params.get(0))) {
-                context.writeError("Invalid password for user: " + context.getUserName());
+                context.getResponder().respondWithInvalidPassword();
             } else {
-                context.writeSuccess("User " + context.getUserName() + " successfully logged in");
+                context.getResponder().respondWithUserSuccessfullyLoggedIn(context.getUserName());
             }
 
             return maintainSession();
@@ -56,9 +56,9 @@ public enum Commands implements Command {
         @Override
         public boolean execute(SessionContext context, List<String> params) throws IOException {
             if (!context.isLoggedIn()) {
-                context.writeError("Login first");
+                context.getResponder().respondWithLoginFirst();
             } else {
-                context.writeSuccess("Hello " + context.getUserName());
+                context.getResponder().respondWithHelloToUser(context.getUserName());
             }
 
             return maintainSession();
@@ -79,9 +79,9 @@ public enum Commands implements Command {
         @Override
         public boolean execute(SessionContext context, List<String> params) throws IOException {
             if (context.isLoggedIn()) {
-                context.writeSuccess("Have a nice day " + context.getUserName());
+                context.getResponder().respondWithByeToUser(context.getUserName());
             } else {
-                context.writeSuccess("Have a nice day");
+                context.getResponder().respondWithBye();
             }
 
             context.closeSession();

@@ -22,7 +22,8 @@ public final class Server {
                 Socket client = server.accept();
                 System.out.println("Client connection received from: " + client.getInetAddress().getHostName() + ":" + client.getPort());
                 Transport transport = new SocketTransport(client);
-                SessionContext context = new DefaultSessionContext(transport);
+                Responder responder = new DefaultResponder(transport);
+                SessionContext context = new DefaultSessionContext(transport, responder);
                 CommandParser commandParser = new DefaultCommandParser(transport);
                 executer.submit(new ProtocolHandler(commandParser, context));
             }

@@ -25,11 +25,12 @@ public final class ProtocolHandler implements Runnable {
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (InvalidCommandException e) {
-                session.writeError("Invalid command");
+                session.getResponder().respondWithInvalidCommand();
             } catch (InvalidArgumentsException e) {
-                session.writeError("Invalid arguemnts");
+                session.getResponder().respondWithInvalidParameters();
             } catch (Throwable t) {
                 t.printStackTrace();
+                throw new RuntimeException(t);
             }
         }
     }

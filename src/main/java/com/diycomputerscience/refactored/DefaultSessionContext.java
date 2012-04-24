@@ -7,10 +7,16 @@ public final class DefaultSessionContext implements SessionContext {
     private String userName;
     private boolean loggedIn;
     private final Transport transport;
+    private final Responder responder;
 
-    public DefaultSessionContext(Transport transport) {
+    public DefaultSessionContext(Transport transport, Responder responder) {
         super();
         this.transport = transport;
+        this.responder = responder;
+    }
+    
+    public Responder getResponder() {
+        return responder;
     }
 
     public String getUserName() {
@@ -31,24 +37,6 @@ public final class DefaultSessionContext implements SessionContext {
 
     public void invalidateLogin() {
         this.loggedIn = false;
-    }
-
-    @Override
-    public void writeError(String msg) {
-        write("ERROR: " + msg);
-    }
-
-    @Override
-    public void writeSuccess(String msg) {
-        write("SUCCESS: " + msg);
-    }
-
-    private void write(String msg) {
-        try {
-            transport.write(msg + "!\n");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     @Override

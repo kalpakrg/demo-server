@@ -13,11 +13,9 @@ public interface SessionContext {
 
     void invalidateLogin();
 
-    void writeError(String msg);
-
-    void writeSuccess(String msg);
-
     boolean login(String password);
 
     void closeSession() throws IOException;
+
+    Responder getResponder();
 }
